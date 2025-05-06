@@ -12,7 +12,7 @@
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.2.3",
     "@react-native-community/checkbox": "^0.5.17",
-    "@react-navigation/native": "^7.0.14",
+    "@react-navigation/native": "^7.1.8",
     "@react-navigation/stack": "^7.1.1",
     "axios": "^1.7.9",
     "bcryptjs": "^3.0.0",
@@ -24,21 +24,28 @@
     "expo-font": "^13.0.3",
     "expo-status-bar": "~2.2.3",
     "express": "^4.21.2",
+    "i18next": "^25.1.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.1",
     "react": "19.0.0",
+    "react-i18next": "^15.5.1",
     "react-native": "0.79.2",
     "react-native-audio-recorder-player": "^3.6.12",
     "react-native-document-picker": "^9.3.1",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-paper": "^5.14.0",
     "react-native-reanimated": "^3.16.7",
-    "react-native-safe-area-context": "^5.2.0",
-    "react-native-screens": "^4.6.0",
-    "react-native-vector-icons": "^10.2.0"
+    "react-native-safe-area-context": "^5.4.0",
+    "react-native-screens": "^4.10.0",
+    "react-native-vector-icons": "^10.2.0",
+    "react-redux": "^9.2.0",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@react-native-community/cli": "^18.0.0"
+    "@react-native-community/cli": "^18.0.0",
+    "typescript": "~5.8.3",
+    "@types/react": "~19.0.10"
   },
   "private": false
 }

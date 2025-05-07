@@ -15,7 +15,7 @@ import SettingsScreen from "../screens/SettingsScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import UserTypeScreen from "../screens/UserTypeScreen";
 import CaregiverLoginScreen from "../screens/CaregiverLoginScreen";
-import CaregiverSignupScreen from "../screens/CaregiverSignupScreen";
+import CaregiverSignupScreen from "../screens/CaregivenSignupScreen";
 import PatientHome from "../screens/PatientHome";
 import SensorScreen from "../screens/SensorScreen";
 import FriendsFamilyMemoriesScreen from "../screens/FriendsFamilyMemoriesScreen";
@@ -83,7 +83,7 @@ const AppTabNavigator = () => {
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
+    // <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* Auth Screens */}
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
@@ -120,7 +120,7 @@ const AppNavigator = () => {
           component={VoiceRecordingScreen}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   );
 };
 

@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { ThemeColors } from "../themes/theme";
+import { ThemeColors } from "../themes/ThemeContext";
 
 // Screens for main app (tab navigator)
 import HomeScreen from "../screens/HomeScreen";

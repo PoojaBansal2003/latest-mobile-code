@@ -1,17 +1,34 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native"; // Import navigation hook
+import { useNavigation } from "@react-navigation/native";
 
 const UserSelectionScreen = () => {
   const [selectedRole, setSelectedRole] = useState(null);
   const navigation = useNavigation();
 
+  // const handleNext = () => {
+  //   if (selectedRole === "patient") {
+  //     navigation.navigate("CaregiverLoginScreen");
+  //   } else if (selectedRole === "caregiver") {
+  //     navigation.navigate("VoiceRecordingScreen");
+  //   } else if (selectedRole === "family") {
+  //     navigation.navigate("FamilyMembersPage"); // Or whatever screen you want for family members
+  //   }
+  // };
   const handleNext = () => {
     if (selectedRole === "patient") {
-      navigation.navigate("CaregiverLoginScreen");
+      navigation.navigate("PatientSignupScreen");
     } else if (selectedRole === "caregiver") {
-      navigation.navigate("VoiceRecordingScreen");
+      navigation.navigate("CaregiverSignupScreen");
+    } else if (selectedRole === "family") {
+      navigation.navigate("FamilyMembersPage"); // Or whatever screen you want for family members
     }
   };
 
@@ -19,29 +36,46 @@ const UserSelectionScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>I am a</Text>
 
-      {/* Patient Selection */}
-      <TouchableOpacity
-        style={[
-          styles.circle,
-          selectedRole === "patient" && styles.selectedCircle,
-        ]}
-        onPress={() => setSelectedRole("patient")}
-      >
-        <FontAwesome5 name="user-injured" size={40} color="#4CAF50" />
-        <Text style={styles.label}>Patient</Text>
-      </TouchableOpacity>
-
-        {/* Caregiver Selection */}
+      <View style={styles.triangleContainer}>
+        {/* Top Center - Patient */}
         <TouchableOpacity
-        style={[
-          styles.circle,
-          selectedRole === "caregiver" && styles.selectedCircle,
-        ]}
-        onPress={() => setSelectedRole("caregiver")}
-      >
-        <FontAwesome5 name="user-nurse" size={40} color="#ff6b6b" />
-        <Text style={styles.label}>Caregiver</Text>
-      </TouchableOpacity>
+          style={[
+            styles.circle,
+            styles.topCircle,
+            selectedRole === "patient" && styles.selectedCircle,
+          ]}
+          onPress={() => setSelectedRole("patient")}
+        >
+          <FontAwesome5 name="user-injured" size={40} color="#4CAF50" />
+          <Text style={styles.label}>Patient</Text>
+        </TouchableOpacity>
+
+        {/* Bottom Left - Caregiver */}
+        <TouchableOpacity
+          style={[
+            styles.circle,
+            styles.bottomLeftCircle,
+            selectedRole === "caregiver" && styles.selectedCircle,
+          ]}
+          onPress={() => setSelectedRole("caregiver")}
+        >
+          <FontAwesome5 name="user-nurse" size={40} color="#ff6b6b" />
+          <Text style={styles.label}>Caregiver</Text>
+        </TouchableOpacity>
+
+        {/* Bottom Right - Family Member */}
+        <TouchableOpacity
+          style={[
+            styles.circle,
+            styles.bottomRightCircle,
+            selectedRole === "family" && styles.selectedCircle,
+          ]}
+          onPress={() => setSelectedRole("family")}
+        >
+          <FontAwesome5 name="users" size={40} color="#2196F3" />
+          <Text style={styles.label}>Family</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Next Button */}
       <TouchableOpacity
@@ -57,6 +91,9 @@ const UserSelectionScreen = () => {
 
 export default UserSelectionScreen;
 
+const { width } = Dimensions.get("window");
+const circleSize = width * 0.3; // 30% of screen width
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -70,17 +107,38 @@ const styles = StyleSheet.create({
     color: "#333",
     marginBottom: 40,
   },
+  triangleContainer: {
+    width: width * 0.8,
+    height: width * 0.8,
+    position: "relative",
+    marginBottom: 40,
+  },
   circle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: circleSize,
+    height: circleSize,
+    borderRadius: circleSize / 2,
     backgroundColor: "#FFD9D9",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
     borderWidth: 3,
     borderColor: "transparent",
     shadowColor: "transparent",
+    position: "absolute",
+  },
+  topCircle: {
+    top: 0,
+    left: (width * 0.8 - circleSize) / 2,
+    backgroundColor: "#E8F5E9", // Light green for patient
+  },
+  bottomLeftCircle: {
+    bottom: 40,
+    left: 10,
+    backgroundColor: "#FFEBEE", // Light red for caregiver
+  },
+  bottomRightCircle: {
+    bottom: 40,
+    right: 10,
+    backgroundColor: "#E3F2FD", // Light blue for family
   },
   selectedCircle: {
     borderColor: "#800080",

@@ -1,6 +1,12 @@
 import React, { useState } from "react";
-import { 
-  View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, Image 
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Linking,
+  Image,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import API_BASE_URL from "../config";
@@ -10,39 +16,21 @@ const CaregiverLoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
- const handleLogin = async () => {
-  try {
-    console.log(API_BASE_URL);
-    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    });
-
-    navigation.navigate("HomeScreen"); // Navigate to home
-    // const data = await response.json();
-
-    // if (response.ok) {
-    //   console.log("Login Successful:", data);
-    //   alert("Login successful!");
-    //   // Token ko local storage ya AsyncStorage me save kar sakti ho
-    // } else {
-    //   console.log("Login Failed:", data);
-    //   alert(data.message || "Invalid credentials");
-    // }
-  } catch (error) {
-    console.error("Error during login:", error);
-    alert("Something went wrong, please try again later.");
-  }
-};
+  const handleLogin = async () => {
+    try {
+      const response = await login(email, password);
+      // Store the token (you might want to use AsyncStorage or secure storage)
+      // Then navigate to home
+      navigation.navigate("HomeScreen");
+    } catch (error) {
+      alert(error.message || "Login failed");
+    }
+  };
 
   const openURL = (url) => {
-    Linking.openURL(url).catch((err) => console.error("Failed to open URL", err));
+    Linking.openURL(url).catch((err) =>
+      console.error("Failed to open URL", err)
+    );
   };
 
   return (
@@ -50,9 +38,9 @@ const CaregiverLoginScreen = ({ navigation }) => {
       {/* Top Violet Section */}
       <View style={styles.topSection}>
         <View style={styles.iconContainer}>
-          <Image 
-            source={require("../../assets/login.jpg")} 
-            style={styles.image} 
+          <Image
+            source={require("../../assets/login.jpg")}
+            style={styles.image}
             resizeMode="cover"
           />
         </View>
@@ -82,7 +70,11 @@ const CaregiverLoginScreen = ({ navigation }) => {
               secureTextEntry={!showPassword}
             />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="gray" />
+              <Ionicons
+                name={showPassword ? "eye-off" : "eye"}
+                size={24}
+                color="gray"
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -102,20 +94,20 @@ const CaregiverLoginScreen = ({ navigation }) => {
 
         {/* Social Login Options */}
         <View style={styles.socialIcons}>
-          <TouchableOpacity 
-            style={[styles.socialButton, { backgroundColor: "#DB4437" }]} 
+          <TouchableOpacity
+            style={[styles.socialButton, { backgroundColor: "#DB4437" }]}
             onPress={() => openURL("https://accounts.google.com")}
           >
             <FontAwesome name="google" size={24} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.socialButton, { backgroundColor: "#1DA1F2" }]} 
+          <TouchableOpacity
+            style={[styles.socialButton, { backgroundColor: "#1DA1F2" }]}
             onPress={() => openURL("https://twitter.com/login")}
           >
             <FontAwesome name="twitter" size={24} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.socialButton, { backgroundColor: "#1877F2" }]} 
+          <TouchableOpacity
+            style={[styles.socialButton, { backgroundColor: "#1877F2" }]}
             onPress={() => openURL("https://www.facebook.com/login")}
           >
             <FontAwesome name="facebook" size={24} color="white" />
@@ -123,14 +115,13 @@ const CaregiverLoginScreen = ({ navigation }) => {
         </View>
 
         {/* Signup Option */}
-<TouchableOpacity 
-  style={styles.signupContainer} 
-  onPress={() => navigation.navigate("CaregiverSignupScreen")}
->
-  <Text style={styles.signupText}>Don't have an account? </Text>
-  <Text style={styles.signupLink}>Sign up</Text>
-</TouchableOpacity>
-
+        <TouchableOpacity
+          style={styles.signupContainer}
+          onPress={() => navigation.navigate("CaregiverSignupScreen")}
+        >
+          <Text style={styles.signupText}>Don't have an account? </Text>
+          <Text style={styles.signupLink}>Sign up</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -217,7 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "100%",
     alignItems: "center",
-    marginBottom: 20
+    marginBottom: 20,
   },
   buttonText: {
     color: "black",
@@ -229,7 +220,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#777",
-    marginBottom: 25
+    marginBottom: 25,
   },
   socialIcons: {
     flexDirection: "row",
@@ -247,7 +238,6 @@ const styles = StyleSheet.create({
   signupContainer: {
     flexDirection: "row",
     marginTop: 100,
-    
   },
   signupText: {
     fontSize: 16,

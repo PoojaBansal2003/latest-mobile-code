@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { useDispatch } from 'react-redux';
-import { addReminderAsync } from '../features/reminders/reminderSlice';
-import { useTheme } from '../themes/ThemeContext';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { Button, TextInput } from "react-native-paper";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useDispatch } from "react-redux";
+import { addReminderAsync } from "../features/reminders/reminderSlice";
+import { useTheme } from "../themes/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 const AddReminderScreen = () => {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date());
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const dispatch = useDispatch();
@@ -32,19 +32,29 @@ const AddReminderScreen = () => {
     if (!title.trim()) return;
 
     dispatch(
-      addReminderAsync({
-        title,
-        time: date.toISOString(),
+      addReminderAsync(
+        {
+          title,
+          time: date.toISOString(),
+        },
+        userToken // You'll need to get this from your auth state
+      )
+    )
+      .then(() => {
+        setTitle("");
+        setDate(new Date());
       })
-    );
-    setTitle('');
-    setDate(new Date());
+      .catch((error) => {
+        alert("Failed to create reminder: " + error.message);
+      });
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <TextInput
-        label={t('reminderTitle')}
+        label={t("reminderTitle")}
         value={title}
         onChangeText={setTitle}
         style={[styles.input, { backgroundColor: theme.colors.surface }]}
@@ -56,7 +66,7 @@ const AddReminderScreen = () => {
         style={styles.button}
         labelStyle={{ color: theme.colors.primary }}
       >
-        {t('selectTime')}: {date.toLocaleTimeString()}
+        {t("selectTime")}: {date.toLocaleTimeString()}
       </Button>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -71,7 +81,7 @@ const AddReminderScreen = () => {
         labelStyle={{ color: theme.colors.onPrimary }}
         disabled={!title.trim()}
       >
-        {t('addReminder')}
+        {t("addReminder")}
       </Button>
     </View>
   );

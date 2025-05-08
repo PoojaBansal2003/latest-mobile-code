@@ -24,6 +24,7 @@ import VoiceRecordingScreen from "../screens/VoiceRecordingScreen";
 import ReminderScreen from "../screens/ReminderScreen";
 import FamilyMemberScreen from "../screens/AddFmDeviceScreen";
 import FamilyMembersPage from "../screens/FamilyMembersPage";
+import PatientSignupScreen from "../screens/PatientSignupScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -84,42 +85,40 @@ const AppTabNavigator = () => {
 const AppNavigator = () => {
   return (
     // <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* Auth Screens */}
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="UserTypeScreen" component={UserTypeScreen} />
-        <Stack.Screen
-          name="CaregiverLoginScreen"
-          component={CaregiverLoginScreen}
-        />
-        <Stack.Screen
-          name="CaregiverSignupScreen"
-          component={CaregiverSignupScreen}
-        />
-        <Stack.Screen
-          name="PatientLoginScreen"
-          component={PatientLoginScreen}
-        />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* Auth Screens */}
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      <Stack.Screen name="UserTypeScreen" component={UserTypeScreen} />
+      <Stack.Screen
+        name="CaregiverLoginScreen"
+        component={CaregiverLoginScreen}
+      />
+      <Stack.Screen
+        name="CaregiverSignupScreen"
+        component={CaregiverSignupScreen}
+      />
+      <Stack.Screen name="PatientSignupScreen" component={PatientSignupScreen} />
+      <Stack.Screen name="PatientLoginScreen" component={PatientLoginScreen} />
 
-        {/* Main App Screens */}
-        <Stack.Screen name="MainApp" component={AppTabNavigator} />
-        <Stack.Screen name="PatientHome" component={PatientHome} />
-        <Stack.Screen name="ReminderScreen" component={ReminderScreen} />
-        <Stack.Screen
-          name="AddFamily&DeviceScreen"
-          component={FamilyMemberScreen}
-        />
-        <Stack.Screen name="FamilyMembersPage" component={FamilyMembersPage} />
-        <Stack.Screen name="SensorDataScreen" component={SensorScreen} />
-        <Stack.Screen
-          name="FriendsFamilyMemoriesScreen"
-          component={FriendsFamilyMemoriesScreen}
-        />
-        <Stack.Screen
-          name="VoiceRecordingScreen"
-          component={VoiceRecordingScreen}
-        />
-      </Stack.Navigator>
+      {/* Main App Screens */}
+      <Stack.Screen name="MainApp" component={AppTabNavigator} />
+      <Stack.Screen name="PatientHome" component={PatientHome} />
+      <Stack.Screen name="ReminderScreen" component={ReminderScreen} />
+      <Stack.Screen
+        name="AddFamily&DeviceScreen"
+        component={FamilyMemberScreen}
+      />
+      <Stack.Screen name="FamilyMembersPage" component={FamilyMembersPage} />
+      <Stack.Screen name="SensorDataScreen" component={SensorScreen} />
+      <Stack.Screen
+        name="FriendsFamilyMemoriesScreen"
+        component={FriendsFamilyMemoriesScreen}
+      />
+      <Stack.Screen
+        name="VoiceRecordingScreen"
+        component={VoiceRecordingScreen}
+      />
+    </Stack.Navigator>
     // </NavigationContainer>
   );
 };

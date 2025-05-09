@@ -1,5 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet, Animated } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+} from "react-native";
 
 const WelcomeScreen = ({ navigation }) => {
   const bounceAnim = useRef(new Animated.Value(0)).current;
@@ -25,7 +32,7 @@ const WelcomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* Brain Logo with Animation */}
       <Animated.Image
-        source={require("../../assets/brain.png")}
+        source={require("../../../assets/brain.png")}
         style={[styles.logo, { transform: [{ translateY: bounceAnim }] }]}
       />
 
@@ -33,16 +40,23 @@ const WelcomeScreen = ({ navigation }) => {
       <Text style={styles.title}>Mind Easy</Text>
 
       {/* Alzheimer Patient Image */}
-      <Image source={require("../../assets/calm.png")} style={styles.patientImage} />
+      <Image
+        source={require("../../../assets/calm.png")}
+        style={styles.patientImage}
+      />
 
       {/* Get Started Button */}
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("UserTypeScreen")}>
-  <Text style={styles.buttonText}>Get Started</Text>
-</TouchableOpacity>
-
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("UserTypeScreen")}
+      >
+        <Text style={styles.buttonText}>Get Started</Text>
+      </TouchableOpacity>
 
       {/* Alzheimer Quote */}
-      <Text style={styles.quote}>"Memories may fade, but love remains forever."</Text>
+      <Text style={styles.quote}>
+        "Memories may fade, but love remains forever."
+      </Text>
     </View>
   );
 };

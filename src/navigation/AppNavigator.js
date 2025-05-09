@@ -12,19 +12,21 @@ import AddReminderScreen from "../screens/AddReminderScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
 // Screens for auth stack
-import WelcomeScreen from "../screens/WelcomeScreen";
-import UserTypeScreen from "../screens/UserTypeScreen";
-import CaregiverLoginScreen from "../screens/CaregiverLoginScreen";
-import CaregiverSignupScreen from "../screens/CaregivenSignupScreen";
+import WelcomeScreen from "../screens/UserAuth/WelcomeScreen";
+import UserTypeScreen from "../screens/UserAuth/UserTypeScreen";
+import CaregiverLoginScreen from "../screens/UserAuth/CaregiverLoginScreen";
+import CaregiverSignupScreen from "../screens/UserAuth/CaregivenSignupScreen";
 import PatientHome from "../screens/PatientHome";
 import SensorScreen from "../screens/SensorScreen";
 import FriendsFamilyMemoriesScreen from "../screens/FriendsFamilyMemoriesScreen";
-import PatientLoginScreen from "../screens/PatientLoginScreen";
+import PatientLoginScreen from "../screens/UserAuth/PatientLoginScreen";
 import VoiceRecordingScreen from "../screens/VoiceRecordingScreen";
 import ReminderScreen from "../screens/ReminderScreen";
 import FamilyMemberScreen from "../screens/AddFmDeviceScreen";
 import FamilyMembersPage from "../screens/FamilyMembersPage";
-import PatientSignupScreen from "../screens/PatientSignupScreen";
+import PatientSignupScreen from "../screens/UserAuth/PatientSignupScreen";
+import FamilySignupScreen from "../screens/UserAuth/FamilySignupScreen";
+import FamilyLoginScreen from "../screens/UserAuth/FamilyLoginScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -97,8 +99,14 @@ const AppNavigator = () => {
         name="CaregiverSignupScreen"
         component={CaregiverSignupScreen}
       />
-      <Stack.Screen name="PatientSignupScreen" component={PatientSignupScreen} />
+      <Stack.Screen
+        name="PatientSignupScreen"
+        component={PatientSignupScreen}
+      />
       <Stack.Screen name="PatientLoginScreen" component={PatientLoginScreen} />
+      {/* Family  */}
+      <Stack.Screen name="FamilySignupScreen" component={FamilySignupScreen} />
+      <Stack.Screen name="FamilyLoginScreen" component={FamilyLoginScreen} />
 
       {/* Main App Screens */}
       <Stack.Screen name="MainApp" component={AppTabNavigator} />

@@ -9,43 +9,21 @@ import {
   Image,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import API_BASE_URL from "../config";
+import API_BASE_URL from "../../config";
 
-const CaregiverSignupScreen = ({ navigation }) => {
-  const [fullName, setFullName] = useState("");
+const CaregiverLoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isFamilyMember, setIsFamilyMember] = useState(false);
-  const [isNurse, setIsNurse] = useState(false);
 
-  const handleSignup = async () => {
+  const handleLogin = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: fullName,
-          email: email,
-          password: password,
-        }),
-      });
-
-      const data = await JSON.parse(response);
-      console.log(response);
-      if (response.ok) {
-        console.log("Signup Successful:", data);
-        alert("Signup successful!");
-        navigation.navigate("CaregiverLoginScreen");
-      } else {
-        console.log("Signup Failed:", data);
-        alert(data.message || "Signup failed, please try again.");
-      }
+      const response = await login(email, password);
+      // Store the token (you might want to use AsyncStorage or secure storage)
+      // Then navigate to home
+      navigation.navigate("HomeScreen");
     } catch (error) {
-      console.error("Error during signup:", error);
-      alert("Something went wrong, please try again later.");
+      alert(error.message || "Login failed");
     }
   };
 
@@ -57,27 +35,20 @@ const CaregiverSignupScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* Top Violet Section */}
       <View style={styles.topSection}>
         <View style={styles.iconContainer}>
           <Image
-            source={require("../../assets/login.jpg")}
+            source={require("../../../assets/login.jpg")}
             style={styles.image}
             resizeMode="cover"
           />
         </View>
       </View>
-
+      <Text style={styles.loginTitle}>Caregiver Login</Text>
+      {/* White Login Section */}
       <View style={styles.bottomSection}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Full Name</Text>
-          <TextInput
-            style={styles.input}
-            value={fullName}
-            onChangeText={setFullName}
-            placeholder="Enter full name"
-          />
-        </View>
-
+        {/* Email Input */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Email Address</Text>
           <TextInput
@@ -85,10 +56,10 @@ const CaregiverSignupScreen = ({ navigation }) => {
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
-            placeholder="Enter email"
           />
         </View>
 
+        {/* Password Input */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Password</Text>
           <View style={styles.passwordContainer}>
@@ -97,7 +68,6 @@ const CaregiverSignupScreen = ({ navigation }) => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
-              placeholder="Enter password"
             />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
               <Ionicons
@@ -109,23 +79,20 @@ const CaregiverSignupScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* <View style={styles.checkboxContainer}>
-          <TouchableOpacity onPress={() => setIsFamilyMember(!isFamilyMember)} style={styles.checkboxRow}>
-            <CheckBox value={isFamilyMember} onValueChange={setIsFamilyMember} />
-            <Text style={styles.checkboxText}>Family Member</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setIsNurse(!isNurse)} style={styles.checkboxRow}>
-            <CheckBox value={isNurse} onValueChange={setIsNurse} />
-            <Text style={styles.checkboxText}>Nurse</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        <TouchableOpacity style={styles.loginButton} onPress={handleSignup}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+        {/* Forgot Password */}
+        <TouchableOpacity style={styles.forgotPassword}>
+          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </TouchableOpacity>
 
+        {/* Login Button */}
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+
+        {/* OR Section */}
         <Text style={styles.orText}>Or</Text>
 
+        {/* Social Login Options */}
         <View style={styles.socialIcons}>
           <TouchableOpacity
             style={[styles.socialButton, { backgroundColor: "#DB4437" }]}
@@ -147,19 +114,20 @@ const CaregiverSignupScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
+        {/* Signup Option */}
         <TouchableOpacity
           style={styles.signupContainer}
-          onPress={() => navigation.navigate("CaregiverLoginScreen")}
+          onPress={() => navigation.navigate("CaregiverSignupScreen")}
         >
-          <Text style={styles.signupText}>Already have an account? </Text>
-          <Text style={styles.signupLink}>Log in</Text>
+          <Text style={styles.signupText}>Don't have an account? </Text>
+          <Text style={styles.signupLink}>Sign up</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default CaregiverSignupScreen;
+export default CaregiverLoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -194,6 +162,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     padding: 20,
     alignItems: "center",
+  },
+  loginTitle: {
+    margin: 20,
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   inputContainer: {
     width: "100%",

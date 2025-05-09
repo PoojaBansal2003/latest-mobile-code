@@ -8,53 +8,29 @@ import {
   Linking,
   Image,
   ScrollView,
-  Modal,
-  Button,
-  Platform,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import API_BASE_URL from "../config";
+import API_BASE_URL from "../../config";
 
-const PatientSignupScreen = ({ navigation }) => {
+const FamilySignupScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [phone, setPhone] = useState("");
-  const [medicalRecordNumber, setMedicalRecordNumber] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [primaryDiagnosis, setPrimaryDiagnosis] = useState("");
-  const [emergencyContactName, setEmergencyContactName] = useState("");
-  const [emergencyContactRelationship, setEmergencyContactRelationship] =
-    useState("");
-  const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
-
-  const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(Platform.OS === "ios");
-    if (selectedDate) {
-      const formattedDate = selectedDate.toISOString().split("T")[0];
-      setDateOfBirth(formattedDate);
-    }
-  };
+  const [relationship, setRelationship] = useState("");
+  const [patientId, setPatientId] = useState("");
 
   const handleSignup = async () => {
     try {
-      const patientData = {
+      const familyData = {
         name: fullName,
         email: email,
         password: password,
         phone: phone,
-        userType: "Patient",
-        medicalRecordNumber: medicalRecordNumber,
-        dateOfBirth: dateOfBirth,
-        primaryDiagnosis: primaryDiagnosis,
-        emergencyContact: {
-          name: emergencyContactName,
-          relationship: emergencyContactRelationship,
-          phone: emergencyContactPhone,
-        },
+        userType: "Family",
+        relationship: relationship,
+        patients: patientId,
       };
 
       const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
@@ -62,15 +38,15 @@ const PatientSignupScreen = ({ navigation }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(patientData),
+        body: JSON.stringify(familyData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Patient Signup Successful:", data);
+        console.log("Family Signup Successful:", data);
         alert("Registration successful!");
-        navigation.navigate("PatientLoginScreen");
+        navigation.navigate("FamilyLoginScreen");
       } else {
         console.log("Signup Failed:", data);
         alert(data.message || "Registration failed, please try again.");
@@ -92,13 +68,14 @@ const PatientSignupScreen = ({ navigation }) => {
       <View style={styles.topSection}>
         <View style={styles.iconContainer}>
           <Image
-            source={require("../../assets/login.jpg")}
+            source={require("../../../assets/login.jpg")}
             style={styles.image}
             resizeMode="cover"
           />
         </View>
       </View>
-      <Text style={styles.patientSignTitle}>Patient SignUp</Text>
+      <Text style={styles.signupTitle}>Family Member SignUp</Text>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -158,74 +135,22 @@ const PatientSignupScreen = ({ navigation }) => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Medical Record Number</Text>
+            <Text style={styles.label}>Patient ID</Text>
             <TextInput
               style={styles.input}
-              value={medicalRecordNumber}
-              onChangeText={setMedicalRecordNumber}
-              placeholder="Enter medical record number"
+              value={patientId}
+              onChangeText={setPatientId}
+              placeholder="Enter patient ID you're related to"
             />
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Date of Birth</Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-              <TextInput
-                style={styles.input}
-                value={dateOfBirth}
-                placeholder="YYYY-MM-DD"
-                editable={false}
-              />
-            </TouchableOpacity>
-            {showDatePicker && (
-              <DateTimePicker
-                value={dateOfBirth ? new Date(dateOfBirth) : new Date()}
-                mode="date"
-                display={Platform.OS === "ios" ? "spinner" : "default"}
-                onChange={handleDateChange}
-                maximumDate={new Date()}
-              />
-            )}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Primary Diagnosis</Text>
+            <Text style={styles.label}>Relationship to Patient</Text>
             <TextInput
               style={styles.input}
-              value={primaryDiagnosis}
-              onChangeText={setPrimaryDiagnosis}
-              placeholder="Enter primary diagnosis"
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Emergency Contact Name</Text>
-            <TextInput
-              style={styles.input}
-              value={emergencyContactName}
-              onChangeText={setEmergencyContactName}
-              placeholder="Enter emergency contact name"
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Emergency Contact Relationship</Text>
-            <TextInput
-              style={styles.input}
-              value={emergencyContactRelationship}
-              onChangeText={setEmergencyContactRelationship}
-              placeholder="E.g. Spouse, Parent, etc."
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Emergency Contact Phone</Text>
-            <TextInput
-              style={styles.input}
-              value={emergencyContactPhone}
-              onChangeText={setEmergencyContactPhone}
-              keyboardType="phone-pad"
-              placeholder="Enter emergency contact phone"
+              value={relationship}
+              onChangeText={setRelationship}
+              placeholder="E.g. Spouse, Parent, Child, Sibling"
             />
           </View>
 
@@ -258,7 +183,7 @@ const PatientSignupScreen = ({ navigation }) => {
 
           <TouchableOpacity
             style={styles.signupContainer}
-            onPress={() => navigation.navigate("PatientLoginScreen")}
+            onPress={() => navigation.navigate("FamilyLoginScreen")}
           >
             <Text style={styles.signupText}>Already have an account? </Text>
             <Text style={styles.signupLink}>Log in</Text>
@@ -268,8 +193,6 @@ const PatientSignupScreen = ({ navigation }) => {
     </View>
   );
 };
-
-export default PatientSignupScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -301,6 +224,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 50,
+  },
+  signupTitle: {
+    margin: 20,
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   bottomSection: {
     flex: 1,
@@ -337,12 +266,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-  },
-  patientSignTitle: {
-    margin: 20,
-    textAlign: "center",
-    fontSize: 24,
-    fontWeight: "bold",
   },
   passwordInput: {
     flex: 1,
@@ -394,3 +317,5 @@ const styles = StyleSheet.create({
     color: "#6A0DAD",
   },
 });
+
+export default FamilySignupScreen;

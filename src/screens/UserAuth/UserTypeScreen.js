@@ -28,7 +28,7 @@ const UserSelectionScreen = () => {
     } else if (selectedRole === "caregiver") {
       navigation.navigate("CaregiverSignupScreen");
     } else if (selectedRole === "family") {
-      navigation.navigate("FamilyMembersPage"); // Or whatever screen you want for family members
+      navigation.navigate("FamilySignupScreen"); // Or whatever screen you want for family members
     }
   };
 

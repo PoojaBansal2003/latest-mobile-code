@@ -7,20 +7,18 @@ import {
   StyleSheet,
   Linking,
   Image,
+  ScrollView,
 } from "react-native";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import API_BASE_URL from "../config";
+import { Ionicons } from "@expo/vector-icons";
+import API_BASE_URL from "../../config";
 
-
-
-const PatientLoginScreen = ({ navigation }) => {
+const FamilyLoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     try {
-      console.log(API_BASE_URL);
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {
@@ -36,12 +34,10 @@ const PatientLoginScreen = ({ navigation }) => {
 
       if (response.ok) {
         console.log("Login Successful:", data);
-        alert("Login successful!");
-        // Token ko local storage ya AsyncStorage me save kar sakti ho
-        navigation.navigate("HomeScreen"); // Navigate to home
+        navigation.navigate("FamilyDashboard");
       } else {
         console.log("Login Failed:", data);
-        alert(data.message || "Invalid credentials");
+        alert(data.message || "Login failed, please try again.");
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -57,104 +53,111 @@ const PatientLoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Top Violet Section */}
       <View style={styles.topSection}>
         <View style={styles.iconContainer}>
           <Image
-            source={require("../../assets/login.jpg")}
+            source={require("../../../assets/login.jpg")}
             style={styles.image}
             resizeMode="cover"
           />
         </View>
       </View>
+      <Text style={styles.loginTitle}>Family Member Login</Text>
 
-      {/* White Login Section */}
-      <View style={styles.bottomSection}>
-        {/* Email Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email Address</Text>
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-        </View>
-
-        {/* Password Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <View style={styles.passwordContainer}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.bottomSection}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email Address</Text>
             <TextInput
-              style={styles.passwordInput}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              placeholder="Enter email"
             />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <Ionicons
-                name={showPassword ? "eye-off" : "eye"}
-                size={24}
-                color="gray"
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={styles.passwordInput}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                placeholder="Enter password"
               />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Ionicons
+                  name={showPassword ? "eye-off" : "eye"}
+                  size={24}
+                  color="gray"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.forgotPassword}
+            onPress={() => navigation.navigate("ForgotPasswordScreen")}
+          >
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Log In</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.orText}>Or</Text>
+
+          <View style={styles.socialIcons}>
+            <TouchableOpacity
+              style={[styles.socialButton, { backgroundColor: "#DB4437" }]}
+              onPress={() => openURL("https://accounts.google.com")}
+            >
+              <Ionicons name="logo-google" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.socialButton, { backgroundColor: "#1DA1F2" }]}
+              onPress={() => openURL("https://twitter.com/login")}
+            >
+              <Ionicons name="logo-twitter" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.socialButton, { backgroundColor: "#1877F2" }]}
+              onPress={() => openURL("https://www.facebook.com/login")}
+            >
+              <Ionicons name="logo-facebook" size={24} color="white" />
             </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Forgot Password */}
-        <TouchableOpacity style={styles.forgotPassword}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
-
-        {/* Login Button */}
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-
-        {/* OR Section */}
-        <Text style={styles.orText}>Or</Text>
-
-        {/* Social Login Options */}
-        <View style={styles.socialIcons}>
           <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: "#DB4437" }]}
-            onPress={() => openURL("https://accounts.google.com")}
+            style={styles.signupContainer}
+            onPress={() => navigation.navigate("FamilySignupScreen")}
           >
-            <FontAwesome name="google" size={24} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: "#1DA1F2" }]}
-            onPress={() => openURL("https://twitter.com/login")}
-          >
-            <FontAwesome name="twitter" size={24} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: "#1877F2" }]}
-            onPress={() => openURL("https://www.facebook.com/login")}
-          >
-            <FontAwesome name="facebook" size={24} color="white" />
+            <Text style={styles.signupText}>Don't have an account? </Text>
+            <Text style={styles.signupLink}>Sign up</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Signup Option */}
-        <TouchableOpacity
-          style={styles.signupContainer}
-          onPress={() => navigation.navigate("CaregiverSignupScreen")}
-        >
-          <Text style={styles.signupText}>Don't have an account? </Text>
-          <Text style={styles.signupLink}>Sign up</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 };
-
-export default PatientLoginScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 20,
   },
   topSection: {
     backgroundColor: "#800080",
@@ -175,6 +178,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 50,
+  },
+  loginTitle: {
+    margin: 20,
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   bottomSection: {
     flex: 1,
@@ -238,7 +247,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   orText: {
-    // marginVertical: 20,
     fontSize: 16,
     fontWeight: "bold",
     color: "#777",
@@ -259,7 +267,7 @@ const styles = StyleSheet.create({
   },
   signupContainer: {
     flexDirection: "row",
-    marginTop: 100,
+    marginTop: 20,
   },
   signupText: {
     fontSize: 16,
@@ -271,3 +279,5 @@ const styles = StyleSheet.create({
     color: "#6A0DAD",
   },
 });
+
+export default FamilyLoginScreen;

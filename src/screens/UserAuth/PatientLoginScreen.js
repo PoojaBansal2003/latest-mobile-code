@@ -9,21 +9,41 @@ import {
   Image,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
-import API_BASE_URL from "../config";
+import API_BASE_URL from "../../config";
 
-const CaregiverLoginScreen = ({ navigation }) => {
+const PatientLoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     try {
-      const response = await login(email, password);
-      // Store the token (you might want to use AsyncStorage or secure storage)
-      // Then navigate to home
-      navigation.navigate("HomeScreen");
+      console.log(API_BASE_URL);
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Login Successful:", data);
+        alert("Login successful!");
+        // Token ko local storage ya AsyncStorage me save kar sakti ho
+        navigation.navigate("HomeScreen"); // Navigate to home
+      } else {
+        console.log("Login Failed:", data);
+        alert(data.message || "Invalid credentials");
+      }
     } catch (error) {
-      alert(error.message || "Login failed");
+      console.error("Error during login:", error);
+      alert("Something went wrong, please try again later.");
     }
   };
 
@@ -39,13 +59,13 @@ const CaregiverLoginScreen = ({ navigation }) => {
       <View style={styles.topSection}>
         <View style={styles.iconContainer}>
           <Image
-            source={require("../../assets/login.jpg")}
+            source={require("../../../assets/login.jpg")}
             style={styles.image}
             resizeMode="cover"
           />
         </View>
       </View>
-
+      <Text style={styles.loginTitle}>Patient Login</Text>
       {/* White Login Section */}
       <View style={styles.bottomSection}>
         {/* Email Input */}
@@ -127,7 +147,7 @@ const CaregiverLoginScreen = ({ navigation }) => {
   );
 };
 
-export default CaregiverLoginScreen;
+export default PatientLoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -209,6 +229,12 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     marginBottom: 20,
+  },
+  loginTitle: {
+    margin: 20,
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   buttonText: {
     color: "black",

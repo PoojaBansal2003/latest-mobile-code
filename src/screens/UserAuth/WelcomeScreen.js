@@ -7,8 +7,10 @@ import {
   StyleSheet,
   Animated,
 } from "react-native";
+import { useSelector } from "react-redux";
 
 const WelcomeScreen = ({ navigation }) => {
+  const auth = useSelector((state) => state.auth);
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -48,7 +50,11 @@ const WelcomeScreen = ({ navigation }) => {
       {/* Get Started Button */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("UserTypeScreen")}
+        onPress={() =>
+          auth === null
+            ? navigation.navigate("MainApp")
+            : navigation.navigate("UserTypeScreen")
+        }
       >
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>

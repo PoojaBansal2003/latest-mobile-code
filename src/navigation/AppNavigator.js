@@ -1,10 +1,17 @@
 import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { ThemeColors } from "../themes/ThemeContext";
+import { ThemeColors, useTheme } from "../themes/ThemeContext";
 
 // Screens for main app (tab navigator)
 import HomeScreen from "../screens/HomeScreen";
@@ -16,26 +23,92 @@ import WelcomeScreen from "../screens/UserAuth/WelcomeScreen";
 import UserTypeScreen from "../screens/UserAuth/UserTypeScreen";
 import CaregiverLoginScreen from "../screens/UserAuth/CaregiverLoginScreen";
 import CaregiverSignupScreen from "../screens/UserAuth/CaregivenSignupScreen";
-import PatientHome from "../screens/PatientHome";
-import SensorScreen from "../screens/SensorScreen";
-import FriendsFamilyMemoriesScreen from "../screens/FriendsFamilyMemoriesScreen";
 import PatientLoginScreen from "../screens/UserAuth/PatientLoginScreen";
-import VoiceRecordingScreen from "../screens/VoiceRecordingScreen";
-import ReminderScreen from "../screens/ReminderScreen";
-import FamilyMemberScreen from "../screens/AddFmDeviceScreen";
-import FamilyMembersPage from "../screens/FamilyMembersPage";
 import PatientSignupScreen from "../screens/UserAuth/PatientSignupScreen";
 import FamilySignupScreen from "../screens/UserAuth/FamilySignupScreen";
 import FamilyLoginScreen from "../screens/UserAuth/FamilyLoginScreen";
 
+// Additional screens
+import PatientHome from "../screens/PatientHome";
+import SensorScreen from "../screens/SensorScreen";
+import FriendsFamilyMemoriesScreen from "../screens/FriendsFamilyMemoriesScreen";
+import VoiceRecordingScreen from "../screens/VoiceRecordingScreen";
+import ReminderScreen from "../screens/ReminderScreen";
+import FamilyMemberScreen from "../screens/AddFmDeviceScreen";
+import FamilyMembersPage from "../screens/FamilyMembersPage";
+
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const MainStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 
+// Scrollable Wrapper Component
+const ScrollableScreen = ({ children }) => (
+  <ScrollView
+    contentContainerStyle={styles.scrollContent}
+    showsVerticalScrollIndicator={false}
+    keyboardShouldPersistTaps="handled"
+  >
+    {children}
+  </ScrollView>
+);
+
+// Create scrollable versions of screens
+const createScrollableScreen = (ScreenComponent) => (props) =>
+  (
+    <ScrollableScreen>
+      <ScreenComponent {...props} />
+    </ScrollableScreen>
+  );
+
+// Create scrollable versions of all screens
+const ScrollableHomeScreen = createScrollableScreen(HomeScreen);
+const ScrollablePatientHome = createScrollableScreen(PatientHome);
+const ScrollableReminderScreen = createScrollableScreen(ReminderScreen);
+const ScrollableAddReminderScreen = createScrollableScreen(AddReminderScreen);
+const ScrollableSettingsScreen = createScrollableScreen(SettingsScreen);
+const ScrollableSensorScreen = createScrollableScreen(SensorScreen);
+const ScrollableFriendsFamilyMemoriesScreen = createScrollableScreen(
+  FriendsFamilyMemoriesScreen
+);
+const ScrollableVoiceRecordingScreen =
+  createScrollableScreen(VoiceRecordingScreen);
+const ScrollableFamilyMemberScreen = createScrollableScreen(FamilyMemberScreen);
+const ScrollableFamilyMembersPage = createScrollableScreen(FamilyMembersPage);
+
 const HomeStackNavigator = () => {
+  const { t } = useTranslation();
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen
+        name="Home"
+        component={ScrollableHomeScreen}
+        options={{ headerShown: true, title: t("home") }}
+      />
+      <HomeStack.Screen name="PatientHome" component={ScrollablePatientHome} />
+      <HomeStack.Screen
+        name="ReminderScreen"
+        component={ScrollableReminderScreen}
+      />
+      <HomeStack.Screen
+        name="AddFamily&DeviceScreen"
+        component={ScrollableFamilyMemberScreen}
+      />
+      <HomeStack.Screen
+        name="FamilyMembersPage"
+        component={ScrollableFamilyMembersPage}
+      />
+      <HomeStack.Screen
+        name="SensorDataScreen"
+        component={ScrollableSensorScreen}
+      />
+      <HomeStack.Screen
+        name="FriendsFamilyMemoriesScreen"
+        component={ScrollableFriendsFamilyMemoriesScreen}
+      />
+      <HomeStack.Screen
+        name="VoiceRecordingScreen"
+        component={ScrollableVoiceRecordingScreen}
+      />
     </HomeStack.Navigator>
   );
 };
@@ -62,22 +135,22 @@ const AppTabNavigator = () => {
         },
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: "gray",
-        headerShown: false,
+        headerShown: true,
       })}
     >
       <Tab.Screen
         name="Home"
         component={HomeStackNavigator}
-        options={{ title: t("home") }}
+        options={{ headerShown: false }}
       />
       <Tab.Screen
         name="AddReminder"
-        component={AddReminderScreen}
+        component={ScrollableAddReminderScreen}
         options={{ title: t("addReminder") }}
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={ScrollableSettingsScreen}
         options={{ title: t("settings") }}
       />
     </Tab.Navigator>
@@ -85,50 +158,66 @@ const AppTabNavigator = () => {
 };
 
 const AppNavigator = () => {
-  return (
-    // <NavigationContainer>
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* Auth Screens */}
-      <Stack.Screen name="Welcome" component={WelcomeScreen} />
-      <Stack.Screen name="UserTypeScreen" component={UserTypeScreen} />
-      <Stack.Screen
-        name="CaregiverLoginScreen"
-        component={CaregiverLoginScreen}
-      />
-      <Stack.Screen
-        name="CaregiverSignupScreen"
-        component={CaregiverSignupScreen}
-      />
-      <Stack.Screen
-        name="PatientSignupScreen"
-        component={PatientSignupScreen}
-      />
-      <Stack.Screen name="PatientLoginScreen" component={PatientLoginScreen} />
-      {/* Family  */}
-      <Stack.Screen name="FamilySignupScreen" component={FamilySignupScreen} />
-      <Stack.Screen name="FamilyLoginScreen" component={FamilyLoginScreen} />
+  // Using destructured theme to avoid returning the entire state
+  const { colors } = useTheme();
 
-      {/* Main App Screens */}
-      <Stack.Screen name="MainApp" component={AppTabNavigator} />
-      <Stack.Screen name="PatientHome" component={PatientHome} />
-      <Stack.Screen name="ReminderScreen" component={ReminderScreen} />
-      <Stack.Screen
-        name="AddFamily&DeviceScreen"
-        component={FamilyMemberScreen}
-      />
-      <Stack.Screen name="FamilyMembersPage" component={FamilyMembersPage} />
-      <Stack.Screen name="SensorDataScreen" component={SensorScreen} />
-      <Stack.Screen
-        name="FriendsFamilyMemoriesScreen"
-        component={FriendsFamilyMemoriesScreen}
-      />
-      <Stack.Screen
-        name="VoiceRecordingScreen"
-        component={VoiceRecordingScreen}
-      />
-    </Stack.Navigator>
-    // </NavigationContainer>
+  return (
+    <NavigationContainer>
+      <MainStack.Navigator>
+        {/* Auth Screens */}
+        <MainStack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{ headerShown: false }}
+        />
+        <MainStack.Screen name="UserTypeScreen" component={UserTypeScreen} />
+        <MainStack.Screen
+          name="CaregiverLoginScreen"
+          component={CaregiverLoginScreen}
+        />
+        <MainStack.Screen
+          name="CaregiverSignupScreen"
+          component={CaregiverSignupScreen}
+        />
+        <MainStack.Screen
+          name="PatientSignupScreen"
+          component={PatientSignupScreen}
+        />
+        <MainStack.Screen
+          name="PatientLoginScreen"
+          component={PatientLoginScreen}
+        />
+        <MainStack.Screen
+          name="FamilySignupScreen"
+          component={FamilySignupScreen}
+        />
+        <MainStack.Screen
+          name="FamilyLoginScreen"
+          component={FamilyLoginScreen}
+        />
+
+        {/* Main App */}
+        <MainStack.Screen
+          name="MainApp"
+          component={AppTabNavigator}
+          options={{
+            headerShown: false,
+            gestureEnabled: false, // Prevents going back to auth
+          }}
+        />
+      </MainStack.Navigator>
+    </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    // padding: 16,
+  },
+});
 
 export default AppNavigator;

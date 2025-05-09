@@ -17,19 +17,33 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import API_BASE_URL from "../../config";
 
 const PatientSignupScreen = ({ navigation }) => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [medicalRecordNumber, setMedicalRecordNumber] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
+  // const [fullName, setFullName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [phone, setPhone] = useState("");
+  // const [medicalRecordNumber, setMedicalRecordNumber] = useState("");
+  // const [dateOfBirth, setDateOfBirth] = useState("");
+  // const [showDatePicker, setShowDatePicker] = useState(false);
+  // const [primaryDiagnosis, setPrimaryDiagnosis] = useState("");
+  // const [emergencyContactName, setEmergencyContactName] = useState("");
+  // const [emergencyContactRelationship, setEmergencyContactRelationship] =
+  //   useState("");
+  // const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
+  const [fullName, setFullName] = useState("mukul dahiya");
+  const [email, setEmail] = useState("m1@gmail.com");
+  const [password, setPassword] = useState("mukul@1234");
+  const [showPassword, setShowPassword] = useState(true);
+  const [phone, setPhone] = useState("9999849790");
+  const [medicalRecordNumber, setMedicalRecordNumber] = useState("8989812");
+  const [dateOfBirth, setDateOfBirth] = useState("1989-04-20");
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [primaryDiagnosis, setPrimaryDiagnosis] = useState("");
-  const [emergencyContactName, setEmergencyContactName] = useState("");
+  const [primaryDiagnosis, setPrimaryDiagnosis] = useState("erferferef");
+  const [emergencyContactName, setEmergencyContactName] = useState("aarti");
   const [emergencyContactRelationship, setEmergencyContactRelationship] =
-    useState("");
-  const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
+    useState("bhen");
+  const [emergencyContactPhone, setEmergencyContactPhone] =
+    useState("08088809899");
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(Platform.OS === "ios");
@@ -40,13 +54,14 @@ const PatientSignupScreen = ({ navigation }) => {
   };
 
   const handleSignup = async () => {
+    console.log("siign up");
     try {
       const patientData = {
         name: fullName,
         email: email,
         password: password,
         phone: phone,
-        userType: "Patient",
+        userType: "patient",
         medicalRecordNumber: medicalRecordNumber,
         dateOfBirth: dateOfBirth,
         primaryDiagnosis: primaryDiagnosis,
@@ -62,7 +77,7 @@ const PatientSignupScreen = ({ navigation }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(patientData),
+        body: patientData,
       });
 
       const data = await response.json();

@@ -55,4 +55,8 @@ export const useAuthInit = () => {
   }, [dispatch]);
 };
 
+store.subscribe(() => {
+  console.log("Updated Redux State:", store.getState());
+});
+
 export default store;

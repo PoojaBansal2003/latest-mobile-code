@@ -29,7 +29,7 @@ import FamilySignupScreen from "../screens/UserAuth/FamilySignupScreen";
 import FamilyLoginScreen from "../screens/UserAuth/FamilyLoginScreen";
 
 // Additional screens
-import PatientHome from "../screens/PatientHome";
+
 import SensorScreen from "../screens/SensorScreen";
 import FriendsFamilyMemoriesScreen from "../screens/FriendsFamilyMemoriesScreen";
 import VoiceRecordingScreen from "../screens/VoiceRecordingScreen";
@@ -62,7 +62,7 @@ const createScrollableScreen = (ScreenComponent) => (props) =>
 
 // Create scrollable versions of all screens
 const ScrollableHomeScreen = createScrollableScreen(HomeScreen);
-const ScrollablePatientHome = createScrollableScreen(PatientHome);
+
 const ScrollableReminderScreen = createScrollableScreen(ReminderScreen);
 const ScrollableAddReminderScreen = createScrollableScreen(AddReminderScreen);
 const ScrollableSettingsScreen = createScrollableScreen(SettingsScreen);
@@ -84,7 +84,7 @@ const HomeStackNavigator = () => {
         component={ScrollableHomeScreen}
         options={{ headerShown: true, title: t("home") }}
       />
-      <HomeStack.Screen name="PatientHome" component={ScrollablePatientHome} />
+
       <HomeStack.Screen
         name="ReminderScreen"
         component={ScrollableReminderScreen}

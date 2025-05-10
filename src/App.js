@@ -32,12 +32,12 @@ const App = () => {
   const { token, isInitialized } = useSelector((state) => state.auth);
 
   // Remove this line that's causing the warning:
-  const state = useSelector((state) => state);
+  // const state = useSelector((state) => state);
   // If you need to debug state, use a more specific selector or use the Redux DevTools
   // instead of logging the entire state
-  setInterval(() => {
-    console.log(state);
-  }, 5000);
+  // setInterval(() => {
+  //   console.log(state);
+  // }, 5000);
 
   // Initialize auth state from AsyncStorage
   useEffect(() => {

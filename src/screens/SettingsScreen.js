@@ -7,15 +7,21 @@ import {
   Text,
   Switch,
   TouchableOpacity,
-  Image,
 } from "react-native";
 import { useTheme } from "../themes/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutSuccess } from "../features/auth/authSlice";
+import { logoutSuccess, logoutUser } from "../features/auth/authSlice";
 
 const SettingsScreen = ({ navigation }) => {
-  const { theme, toggleTheme, isDarkMode } = useTheme();
+  // Get theme context with proper error handling
+  const themeContext = useTheme();
+  const { theme, toggleTheme, isDarkMode } = themeContext || {
+    theme: {},
+    toggleTheme: () => {},
+    isDarkMode: false,
+  };
+
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -25,30 +31,43 @@ const SettingsScreen = ({ navigation }) => {
     i18n.changeLanguage(newLang);
   };
 
-  const handleLogout = () => {
+  handleLogout = () => {
     Alert.alert(
-      t("settings.logoutConfirmTitle"),
-      t("settings.logoutConfirmMessage"),
+      t("settingsLogoutConfirmTitle"),
+      t("settingsLogoutConfirmMessage"),
       [
         {
-          text: t("common.cancel"),
+          text: t("commonCancel"),
           style: "cancel",
         },
         {
-          text: t("common.logout"),
+          text: t("commonLogout"),
           onPress: () => {
-            dispatch(logoutSuccess())
-              .then(() => {
-                navigation.navigate("Welcome");
-              })
-              .catch((error) => {
-                Alert.alert(t("common.error"), t("settings.logoutError"));
-              });
+            try {
+              dispatch(logoutUser())
+                .then(() => {
+                  navigation.navigate("Welcome");
+                })
+                .catch((error) => {
+                  console.error("Logout error:", error);
+                  Alert.alert(t("commonError"), t("settingsLogoutError"));
+                });
+            } catch (error) {
+              console.error("Dispatch error:", error);
+              Alert.alert(t("commonError"), t("settingsLogoutError"));
+            }
           },
           style: "destructive",
         },
       ]
     );
+  };
+  // Helper function to safely access theme colors with fallbacks
+  const getThemeColor = (colorName, fallback = "#000000") => {
+    if (theme && theme.colors && theme.colors[colorName]) {
+      return theme.colors[colorName];
+    }
+    return fallback;
   };
 
   const renderListItem = ({
@@ -58,22 +77,36 @@ const SettingsScreen = ({ navigation }) => {
     onPress,
     rightComponent,
   }) => (
-    <TouchableOpacity style={styles.listItem} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.listItem}
+      onPress={onPress}
+      activeOpacity={onPress ? 0.2 : 1}
+    >
       <View style={styles.listItemLeft}>
         {icon && (
-          <Text style={[styles.listIcon, { color: theme.colors.primary }]}>
+          <Text
+            style={[
+              styles.listIcon,
+              { color: getThemeColor("primary", "#6200ee") },
+            ]}
+          >
             {icon}
           </Text>
         )}
         <View style={styles.listTextContainer}>
-          <Text style={[styles.listItemTitle, { color: theme.colors.text }]}>
+          <Text
+            style={[
+              styles.listItemTitle,
+              { color: getThemeColor("text", "#000000") },
+            ]}
+          >
             {title}
           </Text>
           {description && (
             <Text
               style={[
                 styles.listItemDescription,
-                { color: theme.colors.textSecondary },
+                { color: getThemeColor("textSecondary", "#757575") },
               ]}
             >
               {description}
@@ -89,23 +122,37 @@ const SettingsScreen = ({ navigation }) => {
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={[
+        styles.container,
+        { backgroundColor: getThemeColor("background", "#ffffff") },
+      ]}
     >
       {/* User Profile Section */}
       <View style={styles.profileSection}>
         <View
-          style={[styles.avatar, { backgroundColor: theme.colors.primary }]}
+          style={[
+            styles.avatar,
+            { backgroundColor: getThemeColor("primary", "#6200ee") },
+          ]}
         >
           <Text style={styles.avatarText}>
             {user?.name ? user.name.substring(0, 2).toUpperCase() : "??"}
           </Text>
         </View>
         <View style={styles.profileInfo}>
-          <Text style={[styles.userName, { color: theme.colors.text }]}>
-            {user?.name || t("settings.guest")}
+          <Text
+            style={[
+              styles.userName,
+              { color: getThemeColor("text", "#000000") },
+            ]}
+          >
+            {user?.name || t("settingsGuest")}
           </Text>
           <Text
-            style={[styles.userEmail, { color: theme.colors.textSecondary }]}
+            style={[
+              styles.userEmail,
+              { color: getThemeColor("textSecondary", "#757575") },
+            ]}
           >
             {user?.email || ""}
           </Text>
@@ -113,41 +160,49 @@ const SettingsScreen = ({ navigation }) => {
       </View>
 
       <View
-        style={[styles.divider, { backgroundColor: theme.colors.border }]}
+        style={[
+          styles.divider,
+          { backgroundColor: getThemeColor("border", "#e0e0e0") },
+        ]}
       />
 
       {/* Appearance Settings */}
       <View style={styles.section}>
-        <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>
-          {t("settings.appearance")}
+        <Text
+          style={[
+            styles.sectionHeader,
+            { color: getThemeColor("text", "#000000") },
+          ]}
+        >
+          {t("settingsAppearance")}
         </Text>
         {renderListItem({
           icon: "🌓",
-          title: t("settings.darkMode"),
+          title: t("darkMode"),
           rightComponent: (
             <Switch
               value={isDarkMode}
               onValueChange={toggleTheme}
-              thumbColor={theme.colors.primary}
+              thumbColor={getThemeColor("primary", "#6200ee")}
               trackColor={{
-                false: theme.colors.surfaceVariant,
-                true: theme.colors.primaryContainer,
+                false: getThemeColor("surfaceVariant", "#e0e0e0"),
+                true: getThemeColor("primaryContainer", "#bb86fc"),
               }}
             />
           ),
         })}
         {renderListItem({
           icon: "🌐",
-          title: t("settings.language"),
+          title: t("language"),
           description: i18n.language === "en" ? "English" : "हिन्दी",
           rightComponent: (
             <Switch
               value={i18n.language === "hi"}
               onValueChange={toggleLanguage}
-              thumbColor={theme.colors.primary}
+              thumbColor={getThemeColor("primary", "#6200ee")}
               trackColor={{
-                false: theme.colors.surfaceVariant,
-                true: theme.colors.primaryContainer,
+                false: getThemeColor("surfaceVariant", "#e0e0e0"),
+                true: getThemeColor("primaryContainer", "#bb86fc"),
               }}
             />
           ),
@@ -155,74 +210,96 @@ const SettingsScreen = ({ navigation }) => {
       </View>
 
       <View
-        style={[styles.divider, { backgroundColor: theme.colors.border }]}
+        style={[
+          styles.divider,
+          { backgroundColor: getThemeColor("border", "#e0e0e0") },
+        ]}
       />
 
       {/* Account Settings */}
       <View style={styles.section}>
-        <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>
-          {t("settings.account")}
+        <Text
+          style={[
+            styles.sectionHeader,
+            { color: getThemeColor("text", "#000000") },
+          ]}
+        >
+          {t("settingsAccount")}
         </Text>
         {renderListItem({
           icon: "👤",
-          title: t("settings.profile"),
-          description: t("settings.profileDescription"),
+          title: t("settingsProfile"),
+          description: t("settingsProfileDescription"),
           onPress: () => navigation.navigate("Profile"),
         })}
         {renderListItem({
           icon: "🔒",
-          title: t("settings.security"),
-          description: t("settings.securityDescription"),
+          title: t("settingsSecurity"),
+          description: t("settingsSecurityDescription"),
           onPress: () => navigation.navigate("Security"),
         })}
         {renderListItem({
           icon: "🔔",
-          title: t("settings.notifications"),
-          description: t("settings.notificationsDescription"),
+          title: t("settingsNotifications"),
+          description: t("settingsNotificationsDescription"),
           onPress: () => navigation.navigate("Notifications"),
         })}
       </View>
 
       <View
-        style={[styles.divider, { backgroundColor: theme.colors.border }]}
+        style={[
+          styles.divider,
+          { backgroundColor: getThemeColor("border", "#e0e0e0") },
+        ]}
       />
 
       {/* About & Support */}
       <View style={styles.section}>
-        <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>
-          {t("settings.about")}
+        <Text
+          style={[
+            styles.sectionHeader,
+            { color: getThemeColor("text", "#000000") },
+          ]}
+        >
+          {t("settingsAbout")}
         </Text>
         {renderListItem({
           icon: "❓",
-          title: t("settings.help"),
+          title: t("settingsHelp"),
           onPress: () => navigation.navigate("Help"),
         })}
         {renderListItem({
           icon: "🛡️",
-          title: t("settings.privacy"),
+          title: t("settingsPrivacy"),
           onPress: () => navigation.navigate("Privacy"),
         })}
         {renderListItem({
           icon: "📄",
-          title: t("settings.terms"),
+          title: t("settingsTerms"),
           onPress: () => navigation.navigate("Terms"),
         })}
         {renderListItem({
           icon: "ℹ️",
-          title: t("settings.version"),
+          title: t("settingsVersion"),
           description: "1.0.0",
         })}
       </View>
 
       <View style={styles.logoutSection}>
         <TouchableOpacity
-          style={[styles.logoutButton, { backgroundColor: theme.colors.error }]}
+          style={[
+            styles.logoutButton,
+            { backgroundColor: getThemeColor("error", "#B00020") },
+          ]}
           onPress={handleLogout}
         >
           <Text
-            style={[styles.logoutButtonText, { color: theme.colors.onError }]}
+            style={[
+              styles.logoutButtonText,
+              { color: getThemeColor("onError", "#ffffff") },
+            ]}
           >
-            {t("settings.logout")}
+            {t("settingsLogout")}
           </Text>
         </TouchableOpacity>
       </View>

@@ -4,92 +4,89 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
+      // Core app translations
       myProfile: "My Profile",
       home: "Home",
       addReminder: "Add Reminder",
       settings: "Settings",
       reminderTitle: "Reminder Title",
       selectTime: "Select Time",
-      addReminder: "Add Reminder",
       darkMode: "Dark Mode",
       language: "Language",
       loading: "Loading",
       noReminders: "No reminders yet",
       time: "Time",
 
-      // Settings Screen Translations
-      settings: {
-        appearance: "Appearance",
-        account: "Account",
-        about: "About & Support",
-        logout: "Logout",
-        logoutConfirmTitle: "Logout",
-        logoutConfirmMessage: "Are you sure you want to logout?",
-        logoutError: "Failed to logout. Please try again.",
-        guest: "Guest",
-        profile: "Profile",
-        profileDescription: "Manage your profile information",
-        security: "Security",
-        securityDescription: "Change password and security settings",
-        notifications: "Notifications",
-        notificationsDescription: "Manage notification preferences",
-        help: "Help & Support",
-        privacy: "Privacy Policy",
-        terms: "Terms of Service",
-        version: "App Version",
-      },
-      common: {
-        cancel: "Cancel",
-        logout: "Logout",
-        error: "Error",
-      },
+      // Settings Screen - completely flat structure with prefixes
+      settingsAppearance: "Appearance",
+      settingsAccount: "Account",
+      settingsAbout: "About & Support",
+      settingsLogout: "Logout",
+      settingsLogoutConfirmTitle: "Logout",
+      settingsLogoutConfirmMessage: "Are you sure you want to logout?",
+      settingsLogoutError: "Failed to logout. Please try again.",
+      settingsGuest: "Guest",
+      settingsProfile: "Profile",
+      settingsProfileDescription: "Manage your profile information",
+      settingsSecurity: "Security",
+      settingsSecurityDescription: "Change password and security settings",
+      settingsNotifications: "Notifications",
+      settingsNotificationsDescription: "Manage notification preferences",
+      settingsHelp: "Help & Support",
+      settingsPrivacy: "Privacy Policy",
+      settingsTerms: "Terms of Service",
+      settingsVersion: "App Version",
+
+      // Common translations
+      commonCancel: "Cancel",
+      commonLogout: "Logout",
+      commonError: "Error",
     },
   },
   hi: {
     translation: {
+      // Core app translations
       myProfile: "मेरी प्रोफाइल",
       home: "होम",
       addReminder: "अनुस्मारक जोड़ें",
       settings: "सेटिंग्स",
       reminderTitle: "अनुस्मारक शीर्षक",
       selectTime: "समय चुनें",
-      addReminder: "अनुस्मारक जोड़ें",
       darkMode: "डार्क मोड",
       language: "भाषा",
       loading: "लोड हो रहा है",
       noReminders: "अभी तक कोई अनुस्मारक नहीं",
       time: "समय",
 
-      // Settings Screen Translations
-      settings: {
-        appearance: "प्रकटन",
-        account: "खाता",
-        about: "सहायता एवं जानकारी",
-        logout: "लॉग आउट",
-        logoutConfirmTitle: "लॉग आउट",
-        logoutConfirmMessage: "क्या आप वाकई लॉग आउट करना चाहते हैं?",
-        logoutError: "लॉगआउट विफल। कृपया पुनः प्रयास करें।",
-        guest: "अतिथि",
-        profile: "प्रोफ़ाइल",
-        profileDescription: "अपनी प्रोफ़ाइल जानकारी प्रबंधित करें",
-        security: "सुरक्षा",
-        securityDescription: "पासवर्ड और सुरक्षा सेटिंग्स बदलें",
-        notifications: "सूचनाएं",
-        notificationsDescription: "सूचना वरीयताएं प्रबंधित करें",
-        help: "सहायता एवं समर्थन",
-        privacy: "गोपनीयता नीति",
-        terms: "सेवा की शर्तें",
-        version: "ऐप संस्करण",
-      },
-      common: {
-        cancel: "रद्द करें",
-        logout: "लॉग आउट",
-        error: "त्रुटि",
-      },
+      // Settings Screen - completely flat structure with prefixes
+      settingsAppearance: "प्रकटन",
+      settingsAccount: "खाता",
+      settingsAbout: "सहायता एवं जानकारी",
+      settingsLogout: "लॉग आउट",
+      settingsLogoutConfirmTitle: "लॉग आउट",
+      settingsLogoutConfirmMessage: "क्या आप वाकई लॉग आउट करना चाहते हैं?",
+      settingsLogoutError: "लॉगआउट विफल। कृपया पुनः प्रयास करें।",
+      settingsGuest: "अतिथि",
+      settingsProfile: "प्रोफ़ाइल",
+      settingsProfileDescription: "अपनी प्रोफ़ाइल जानकारी प्रबंधित करें",
+      settingsSecurity: "सुरक्षा",
+      settingsSecurityDescription: "पासवर्ड और सुरक्षा सेटिंग्स बदलें",
+      settingsNotifications: "सूचनाएं",
+      settingsNotificationsDescription: "सूचना वरीयताएं प्रबंधित करें",
+      settingsHelp: "सहायता एवं समर्थन",
+      settingsPrivacy: "गोपनीयता नीति",
+      settingsTerms: "सेवा की शर्तें",
+      settingsVersion: "ऐप संस्करण",
+
+      // Common translations
+      commonCancel: "रद्द करें",
+      commonLogout: "लॉग आउट",
+      commonError: "त्रुटि",
     },
   },
 };
 
+// Simpler initialization with flattened structure
 i18n.use(initReactI18next).init({
   resources,
   lng: "en",
@@ -97,6 +94,9 @@ i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
+  // Disable nesting feature to avoid potential issues
+  nsSeparator: false,
+  keySeparator: false,
 });
 
 export default i18n;

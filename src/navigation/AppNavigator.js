@@ -80,7 +80,7 @@ const HomeStackNavigator = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Home"
+        name="HomeScreen" // Changed from "Home" to "HomeScreen"
         component={ScrollableHomeScreen}
         options={{ headerShown: true, title: t("home") }}
       />
@@ -123,7 +123,8 @@ const AppTabNavigator = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Home") {
+          if (route.name === "HomeTab") {
+            // Changed from "Home" to "HomeTab"
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "AddReminder") {
             iconName = focused ? "add-circle" : "add-circle-outline";
@@ -139,9 +140,15 @@ const AppTabNavigator = () => {
       })}
     >
       <Tab.Screen
-        name="Home"
+        name="HomeTab" // Changed from "Home" to "HomeTab"
         component={HomeStackNavigator}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          title: t("home"),
+          // tabBarLabel: ({ focused, color }) => (
+          //   <Text style={{ color, fontSize: 12 }}>Home</Text>
+          // ),
+        }}
       />
       <Tab.Screen
         name="AddReminder"

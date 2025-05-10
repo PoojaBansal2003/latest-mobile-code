@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { makeApiRequest } from "../../utils/api-error-utils";
 import API_BASE_URL from "../../config";
 
 const PatientSignupScreen = ({ navigation }) => {
@@ -53,47 +54,48 @@ const PatientSignupScreen = ({ navigation }) => {
     }
   };
 
-  const handleSignup = async () => {
-    console.log("siign up");
-    try {
-      const patientData = {
-        name: fullName,
-        email: email,
-        password: password,
-        phone: phone,
-        userType: "patient",
-        medicalRecordNumber: medicalRecordNumber,
-        dateOfBirth: dateOfBirth,
-        primaryDiagnosis: primaryDiagnosis,
-        emergencyContact: {
-          name: emergencyContactName,
-          relationship: emergencyContactRelationship,
-          phone: emergencyContactPhone,
-        },
-      };
+  const handleSignup = () => {
+    console.log("sign up");
 
-      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: patientData,
-      });
+    const patientData = {
+      name: fullName,
+      email: email,
+      password: password,
+      phone: phone,
+      userType: "patient",
+      medicalRecordNumber: medicalRecordNumber,
+      dateOfBirth: dateOfBirth,
+      primaryDiagnosis: primaryDiagnosis,
+      emergencyContact: {
+        name: emergencyContactName,
+        relationship: emergencyContactRelationship,
+        phone: emergencyContactPhone,
+      },
+    };
 
-      const data = await response.json();
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(patientData),
+    };
 
-      if (response.ok) {
+    makeApiRequest(
+      `${API_BASE_URL}/api/auth/register`,
+      options,
+      (data) => {
+        // Success callback
         console.log("Patient Signup Successful:", data);
         alert("Registration successful!");
         navigation.navigate("PatientLoginScreen");
-      } else {
-        console.log("Signup Failed:", data);
-        alert(data.message || "Registration failed, please try again.");
+      },
+      (errorMessage) => {
+        // Error callback
+        console.log("Signup Failed");
+        alert(errorMessage);
       }
-    } catch (error) {
-      console.error("Error during signup:", error);
-      alert("Something went wrong, please try again later.");
-    }
+    );
   };
 
   const openURL = (url) => {

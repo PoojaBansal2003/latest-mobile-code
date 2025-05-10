@@ -1,19 +1,36 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from "react-native";
+import { useTranslation } from "react-i18next";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const { width, height } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.container}>
-      <Ionicons name="notifications-outline" size={28} color="white" style={styles.notificationIcon} />
-      
+      <Ionicons
+        name="notifications-outline"
+        size={28}
+        color="white"
+        style={styles.notificationIcon}
+      />
+
       {/* Top Box */}
       <View style={styles.topBox}>
         <View style={styles.innerTopBox}>
-          <Text style={styles.profileText}>My Profile</Text>
-          <Image source={require("../../assets/old-man.jpg")} style={styles.profileImage} />
+          <Text style={styles.profileText}>{t("myProfile")}</Text>
+          <Image
+            source={require("../../assets/old-man.jpg")}
+            style={styles.profileImage}
+          />
           <Text style={styles.nameText}>Somnath Singh</Text>
           <Text style={styles.detailsText}>54 yrs, Port Angeles</Text>
         </View>
@@ -28,8 +45,9 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.boxContainer}>
         {/* Row 1 */}
         <View style={styles.row}>
-          <TouchableOpacity style={[styles.box, styles.box1]}
-          onPress={() => navigation.navigate("FriendsFamilyMemoriesScreen")}
+          <TouchableOpacity
+            style={[styles.box, styles.box1]}
+            onPress={() => navigation.navigate("FriendsFamilyMemoriesScreen")}
           >
             <Text style={styles.boxTitleWhite}>Friends & Family Memories</Text>
             <Text style={styles.boxDescWhite}>Relive and share moments.</Text>
@@ -41,13 +59,18 @@ const HomeScreen = ({ navigation }) => {
         </View>
         {/* Row 2 */}
         <View style={styles.row}>
-          <TouchableOpacity style={[styles.box, styles.box3]} onPress={() => navigation.navigate("SensorDataScreen")}>
+          <TouchableOpacity
+            style={[styles.box, styles.box3]}
+            onPress={() => navigation.navigate("SensorDataScreen")}
+          >
             <Text style={styles.boxTitleBlack}>Sensor Data</Text>
             <Text style={styles.boxDescBlack}>Monitor health metrics.</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.box, styles.box4]}>
             <Text style={styles.boxTitleBlack}>Mindfulness & Relaxation</Text>
-            <Text style={styles.boxDescBlack}>Meditation and stress relief.</Text>
+            <Text style={styles.boxDescBlack}>
+              Meditation and stress relief.
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

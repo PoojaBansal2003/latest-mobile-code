@@ -8,6 +8,8 @@ import {
   isAuthenticated,
 } from "../../services/authService";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 // Initialize with empty values, will be populated from AsyncStorage on app start
 const initialState = {
   user: null,
@@ -16,6 +18,22 @@ const initialState = {
   error: null,
   isInitialized: false, // Flag to track whether we've checked AsyncStorage
 };
+
+// Async thunk for direct AsyncStorage operations
+export const storeAuthData = createAsyncThunk(
+  "auth/storeAuthData",
+  async ({ user, token }, { rejectWithValue }) => {
+    try {
+      await AsyncStorage.setItem(
+        "epo_auth_user",
+        JSON.stringify({ user, token })
+      );
+      return { user, token };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -26,6 +44,7 @@ const authSlice = createSlice({
       state.error = null;
     },
     loginSuccess(state, action) {
+      // No async code here - this happens in our thunk
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.loading = false;
@@ -60,6 +79,14 @@ const authSlice = createSlice({
       }
       state.isInitialized = true;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(storeAuthData.fulfilled, (state, action) => {
+      // This is optional since we likely already updated state in loginSuccess
+      // But included for completeness
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+    });
   },
 });
 
@@ -110,12 +137,18 @@ export const initializeAuth = createAsyncThunk(
   }
 );
 
-// Login user and store data in AsyncStorage
+// Login user and store data in AsyncStorage - updated to use the new storeAuthData thunk
 export const loginUser = (email, password) => async (dispatch) => {
   try {
     dispatch(loginStart());
     const { user, token } = await login(email, password);
+
+    // First update the redux state
     dispatch(loginSuccess({ user, token }));
+
+    // Then store in AsyncStorage
+    dispatch(storeAuthData({ user, token }));
+
     return { user, token };
   } catch (err) {
     dispatch(loginFailure(err.message));

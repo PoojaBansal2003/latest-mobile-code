@@ -51,8 +51,8 @@ const WelcomeScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
-          auth === null
-            ? navigation.navigate("MainApp")
+          auth !== null
+            ? navigation.navigate("MainApp", { screen: "Home" })
             : navigation.navigate("UserTypeScreen")
         }
       >

@@ -10,37 +10,48 @@ import {
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import API_BASE_URL from "../../config";
+import { makeApiRequest } from "../../utils/api-error-utils";
+import { useDispatch } from "react-redux";
+import { loginSuccess, storeAuthData } from "../../features/auth/authSlice";
 
 const PatientLoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const dispatch = useDispatch();
   const handleLogin = async () => {
     try {
-      console.log(API_BASE_URL);
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const options = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
+        body: JSON.stringify({ email, password }),
+      };
+      makeApiRequest(
+        `${API_BASE_URL}/api/auth/login`,
+        options,
+        (data) => {
+          // Success callback
+          console.log("Patient Login Successful:", data);
+          if (data?.user && data?.token) {
+            const { user, token } = data;
+            console.log("Inside");
+            // First update Redux state
+            dispatch(loginSuccess({ user, token }));
 
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Login Successful:", data);
-        alert("Login successful!");
-        // Token ko local storage ya AsyncStorage me save kar sakti ho
-        navigation.navigate("HomeScreen"); // Navigate to home
-      } else {
-        console.log("Login Failed:", data);
-        alert(data.message || "Invalid credentials");
-      }
+            // Then store in AsyncStorage
+            dispatch(storeAuthData({ user, token }));
+          }
+          alert("Login successful!");
+          navigation.navigate("MainApp", { screen: "Home" });
+        },
+        (errorMessage) => {
+          // Error callback
+          console.log("Login Failed");
+          alert(errorMessage);
+        }
+      );
     } catch (error) {
       console.error("Error during login:", error);
       alert("Something went wrong, please try again later.");

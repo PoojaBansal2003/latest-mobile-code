@@ -13,6 +13,18 @@ const WelcomeScreen = ({ navigation }) => {
   const auth = useSelector((state) => state.auth);
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
+  const handleNavigation = () => {
+    if (
+      auth.user === null ||
+      (auth.user == null && auth.token === null) ||
+      auth.token == null
+    ) {
+      navigation.navigate("UserTypeScreen");
+      return;
+    }
+    navigation.navigate("MainApp", "Home");
+  };
+
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -48,14 +60,7 @@ const WelcomeScreen = ({ navigation }) => {
       />
 
       {/* Get Started Button */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>
-          auth !== null
-            ? navigation.navigate("MainApp", { screen: "Home" })
-            : navigation.navigate("UserTypeScreen")
-        }
-      >
+      <TouchableOpacity style={styles.button} onPress={handleNavigation}>
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
 

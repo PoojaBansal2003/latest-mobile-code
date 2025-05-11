@@ -6,6 +6,8 @@ const resources = {
     translation: {
       // Core app translations
       home: "Home",
+
+      patient: "Patient",
       addReminder: "Add Reminder",
       settings: "Settings",
       reminderTitle: "Reminder Title",
@@ -49,6 +51,7 @@ const resources = {
   hi: {
     translation: {
       // Core app translations
+      patient: "मरीज",
       home: "होम",
       addReminder: "अनुस्मारक जोड़ें",
       settings: "सेटिंग्स",

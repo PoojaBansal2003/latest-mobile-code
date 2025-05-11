@@ -43,8 +43,18 @@ const HomeScreen = ({ navigation }) => {
           {user?.userType === "patient" && (
             <>
               <Text style={styles.detailsText}>
-                {calculateAge(user?.dateOfBirth)} {t("yrs")}, Caretaker -
+                {calculateAge(user?.dateOfBirth)} {t("yrs")},{" "}
+                {t(user?.userType).toUpperCase()}
               </Text>
+              <Text style={styles.detailsText}>{user?.phone}</Text>
+            </>
+          )}
+          {user?.userType !== "patient" && (
+            <>
+              <Text style={styles.detailsText}>
+                {t(user?.userType).toUpperCase()}
+              </Text>
+              <Text style={styles.detailsText}>{user?.phone}</Text>
             </>
           )}
           {/* <Text style={styles.detailsText}>
@@ -53,15 +63,9 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={styles.helloContainer}>
-        <Text style={styles.helloText}>How can we help you today?</Text>
-      </View>
-
       {/* "How can we help you today?" Text */}
       <View style={styles.helloContainer}>
-        <TouchableOpacity onPress={() => {dispatch(logoutUser()); navigation.navigate("Welcome")}}>
-          <Text style={styles.helloText}>Logout</Text>
-        </TouchableOpacity>
+        <Text style={styles.helloText}>How can we help you today?</Text>
       </View>
 
       {/* Boxes Section */}

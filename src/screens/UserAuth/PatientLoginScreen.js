@@ -43,7 +43,6 @@ const PatientLoginScreen = ({ navigation }) => {
         `${API_BASE_URL}/api/auth/login`,
         options,
         async (data) => {
-          console.log("Data = > ", data);
           if (data?.user && data?.token) {
             await dispatch(loginUser(data?.user, data?.token));
             // Alert.alert("Success", "Login successful!");

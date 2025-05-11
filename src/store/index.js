@@ -1,62 +1,51 @@
-// store/index.js or where you configure your Redux store
 import { configureStore } from "@reduxjs/toolkit";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import authReducer, {
-  loginSuccess,
-  initAuthSuccess,
-} from "../features/auth/authSlice";
+import { combineReducers } from "redux";
+import authReducer from "../features/auth/authSlice";
 import reminderReducer from "../features/reminders/reminderSlice";
-// Create the Redux store
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    reminders: reminderReducer,
-    // Add other reducers here
-  },
-  devTools: true,
+import patientReducer from "../features/details/patientSlice";
+import caregiverReducer from "../features/details/caregiverSlice";
+import familyMemberReducer from "../features/details/familyMemberSlice";
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+  reminders: reminderReducer,
+  patient: patientReducer,
+  caregiver: caregiverReducer,
+  familyMember: familyMemberReducer,
 });
 
-// Custom hook to initialize auth state from AsyncStorage
-export const useAuthInit = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const initializeAuthState = async () => {
-      try {
-        // Check if auth data exists in AsyncStorage
-        const authDataString = await AsyncStorage.getItem("epo_auth_user");
-
-        if (authDataString) {
-          const authData = JSON.parse(authDataString);
-
-          // If we have valid data, update Redux state
-          if (authData && authData.user && authData.token) {
-            dispatch(
-              loginSuccess({
-                user: authData.user,
-                token: authData.token,
-              })
-            );
-          }
-        }
-
-        // Mark initialization as complete regardless of result
-        dispatch(initAuthSuccess());
-      } catch (error) {
-        console.error("Error initializing auth state:", error);
-        // Still mark as initialized even if there was an error
-        dispatch(initAuthSuccess());
-      }
-    };
-
-    initializeAuthState();
-  }, [dispatch]);
+const persistConfig = {
+  key: "root",
+  storage: AsyncStorage,
+  whitelist: ["auth"],
+  timeout: 0,
 };
 
-store.subscribe(() => {
-  console.log("Updated Redux State:", store.getState());
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
+    }),
 });
 
-export default store;
+export const persistor = persistStore(store);
+
+// Debugging
+if (__DEV__) {
+  store.subscribe(() => {
+    console.log("Updated Reduxx State : ", store.getState());
+  });
+  persistor.subscribe(() => {
+    const state = store.getState();
+    console.log("Persisted State:", {
+      auth: state.auth,
+    });
+  });
+}

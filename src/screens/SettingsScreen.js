@@ -11,7 +11,7 @@ import {
 import { useTheme } from "../themes/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutSuccess, logoutUser } from "../features/auth/authSlice";
+import { logoutUser } from "../features/auth/authSlice";
 
 const SettingsScreen = ({ navigation }) => {
   // Get theme context with proper error handling
@@ -31,7 +31,8 @@ const SettingsScreen = ({ navigation }) => {
     i18n.changeLanguage(newLang);
   };
 
-  handleLogout = () => {
+  // In SettingsScreen.js - Fix the thunk dispatch and clean up the logic
+  const handleLogout = () => {
     Alert.alert(
       t("settingsLogoutConfirmTitle"),
       t("settingsLogoutConfirmMessage"),
@@ -43,19 +44,14 @@ const SettingsScreen = ({ navigation }) => {
         {
           text: t("commonLogout"),
           onPress: () => {
-            try {
-              dispatch(logoutUser())
-                .then(() => {
-                  navigation.navigate("Welcome");
-                })
-                .catch((error) => {
-                  console.error("Logout error:", error);
-                  Alert.alert(t("commonError"), t("settingsLogoutError"));
-                });
-            } catch (error) {
-              console.error("Dispatch error:", error);
-              Alert.alert(t("commonError"), t("settingsLogoutError"));
-            }
+            // Properly dispatch the async thunk and handle the promise
+            dispatch(logoutUser())
+              .unwrap() // Extract the resolved value from the Promise
+              .then(() => navigation.navigate("Welcome"))
+              .catch((error) => {
+                console.error("Logout error:", error);
+                Alert.alert(t("commonError"), t("settingsLogoutError"));
+              });
           },
           style: "destructive",
         },

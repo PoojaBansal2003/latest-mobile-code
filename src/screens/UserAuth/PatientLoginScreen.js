@@ -20,6 +20,12 @@ const PatientLoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter both email and password");
+      return;
+    }
+
+    setIsLoading(true);
     try {
       const options = {
         method: "POST",
@@ -28,33 +34,28 @@ const PatientLoginScreen = ({ navigation }) => {
         },
         body: JSON.stringify({ email, password }),
       };
+
       makeApiRequest(
         `${API_BASE_URL}/api/auth/login`,
         options,
-        (data) => {
-          // Success callback
-          console.log("Patient Login Successful:", data);
+        async (data) => {
           if (data?.user && data?.token) {
-            const { user, token } = data;
-            console.log("Inside");
-            // First update Redux state
-            dispatch(loginSuccess({ user, token }));
-
-            // Then store in AsyncStorage
-            dispatch(storeAuthData({ user, token }));
+            await dispatch(loginUser(email, password));
+            Alert.alert("Success", "Login successful!");
+            navigation.navigate("DetailsGathering", {
+              patientId: data.user._id,
+            });
           }
-          alert("Login successful!");
-          navigation.navigate("MainApp", { screen: "Home" });
         },
-        (errorMessage) => {
-          // Error callback
-          console.log("Login Failed");
-          alert(errorMessage);
+        (error) => {
+          Alert.alert("Error", error);
         }
       );
     } catch (error) {
-      console.error("Error during login:", error);
-      alert("Something went wrong, please try again later.");
+      Alert.alert("Error", "An unexpected error occurred");
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -21,8 +21,11 @@ const WelcomeScreen = ({ navigation }) => {
     ) {
       navigation.navigate("UserTypeScreen");
       return;
+    } else if (auth.user && auth.token) {
+      navigation.navigate("DetailsGathering", {
+        patientId: auth.user?._id,
+      });
     }
-    navigation.navigate("MainApp", "Home");
   };
 
   useEffect(() => {

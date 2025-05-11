@@ -9,11 +9,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useDispatch, useSelector } from "react-redux";
+import { calculateAge } from "../utils/dateUtils";
+import { logoutUser } from "../features/auth/authSlice";
 
 const { width, height } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  const { user, token } = useSelector((state) => state.auth);
   return (
     <View style={styles.container}>
       <Ionicons
@@ -31,14 +37,31 @@ const HomeScreen = ({ navigation }) => {
             source={require("../../assets/old-man.jpg")}
             style={styles.profileImage}
           />
-          <Text style={styles.nameText}>Somnath Singh</Text>
-          <Text style={styles.detailsText}>54 yrs, Port Angeles</Text>
+          <Text style={styles.nameText}>
+            {user?.name ? user.name : "Guest"}
+          </Text>
+          {user?.userType === "patient" && (
+            <>
+              <Text style={styles.detailsText}>
+                {calculateAge(user?.dateOfBirth)} {t("yrs")}, Caretaker -
+              </Text>
+            </>
+          )}
+          {/* <Text style={styles.detailsText}>
+            {calculateAge(dateOfBirth)} {t("yrs")}, Port Angeles
+          </Text> */}
         </View>
+      </View>
+
+      <View style={styles.helloContainer}>
+        <Text style={styles.helloText}>How can we help you today?</Text>
       </View>
 
       {/* "How can we help you today?" Text */}
       <View style={styles.helloContainer}>
-        <Text style={styles.helloText}>How can we help you today?</Text>
+        <TouchableOpacity onPress={() => {dispatch(logoutUser()); navigation.navigate("Welcome")}}>
+          <Text style={styles.helloText}>Logout</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Boxes Section */}

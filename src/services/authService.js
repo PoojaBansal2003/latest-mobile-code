@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_BASE_URL from "../config";
 
 // Storage keys
-const AUTH_DATA_KEY = "epo_auth_user";
+const AUTH_DATA_KEY = "expo_auth_user";
 
 /**
  * Store authentication data in AsyncStorage as a single JSON object

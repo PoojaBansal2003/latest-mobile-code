@@ -5,7 +5,6 @@ const resources = {
   en: {
     translation: {
       // Core app translations
-      myProfile: "My Profile",
       home: "Home",
       addReminder: "Add Reminder",
       settings: "Settings",
@@ -37,6 +36,10 @@ const resources = {
       settingsTerms: "Terms of Service",
       settingsVersion: "App Version",
 
+      // MyProfile
+      myProfile: "My Profile",
+      yrs: "year",
+
       // Common translations
       commonCancel: "Cancel",
       commonLogout: "Logout",
@@ -46,7 +49,6 @@ const resources = {
   hi: {
     translation: {
       // Core app translations
-      myProfile: "मेरी प्रोफाइल",
       home: "होम",
       addReminder: "अनुस्मारक जोड़ें",
       settings: "सेटिंग्स",
@@ -77,6 +79,10 @@ const resources = {
       settingsPrivacy: "गोपनीयता नीति",
       settingsTerms: "सेवा की शर्तें",
       settingsVersion: "ऐप संस्करण",
+
+      // My Profile
+      myProfile: "मेरी प्रोफाइल",
+      yrs: "वर्ष",
 
       // Common translations
       commonCancel: "रद्द करें",

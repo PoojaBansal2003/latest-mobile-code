@@ -36,6 +36,7 @@ import VoiceRecordingScreen from "../screens/VoiceRecordingScreen";
 import ReminderScreen from "../screens/ReminderScreen";
 import FamilyMemberScreen from "../screens/AddFmDeviceScreen";
 import FamilyMembersPage from "../screens/FamilyMembersPage";
+import DetailsGatheringScreen from "../screens/UserAuth/DetailsGatheringScreen";
 
 const Tab = createBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -177,6 +178,7 @@ const AppNavigator = () => {
           component={WelcomeScreen}
           options={{ headerShown: false }}
         />
+
         <MainStack.Screen name="UserTypeScreen" component={UserTypeScreen} />
         <MainStack.Screen
           name="CaregiverLoginScreen"
@@ -201,6 +203,10 @@ const AppNavigator = () => {
         <MainStack.Screen
           name="FamilyLoginScreen"
           component={FamilyLoginScreen}
+        />
+        <MainStack.Screen
+          name="DetailsGathering"
+          component={DetailsGatheringScreen}
         />
 
         {/* Main App */}

@@ -7,24 +7,29 @@ import {
   StyleSheet,
   Linking,
   Image,
+  Alert,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import API_BASE_URL from "../../config";
 import { makeApiRequest } from "../../utils/api-error-utils";
 import { useDispatch } from "react-redux";
-import { loginSuccess, storeAuthData } from "../../features/auth/authSlice";
+import {
+  loginSuccess,
+  loginUser,
+  storeAuthData,
+} from "../../features/auth/authSlice";
 
 const PatientLoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert("Error", "Please enter both email and password");
       return;
     }
-
     setIsLoading(true);
     try {
       const options = {
@@ -34,14 +39,14 @@ const PatientLoginScreen = ({ navigation }) => {
         },
         body: JSON.stringify({ email, password }),
       };
-
       makeApiRequest(
         `${API_BASE_URL}/api/auth/login`,
         options,
         async (data) => {
+          console.log("Data = > ", data);
           if (data?.user && data?.token) {
-            await dispatch(loginUser(email, password));
-            Alert.alert("Success", "Login successful!");
+            await dispatch(loginUser(data?.user, data?.token));
+            // Alert.alert("Success", "Login successful!");
             navigation.navigate("DetailsGathering", {
               patientId: data.user._id,
             });
@@ -117,8 +122,16 @@ const PatientLoginScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         {/* Login Button */}
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={handleLogin}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.loginButtonText}>Login</Text>
+          )}
         </TouchableOpacity>
 
         {/* OR Section */}
@@ -162,6 +175,7 @@ const PatientLoginScreen = ({ navigation }) => {
 export default PatientLoginScreen;
 
 const styles = StyleSheet.create({
+  loginButtonText: {},
   container: {
     flex: 1,
     backgroundColor: "#fff",

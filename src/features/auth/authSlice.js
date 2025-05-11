@@ -131,10 +131,11 @@ export const initializeAuth = createAsyncThunk(
   }
 );
 
-export const loginUser = (email, password) => async (dispatch) => {
+export const loginUser = (user, token) => async (dispatch) => {
   try {
     dispatch(authSlice.actions.loginStart());
-    const { user, token } = await login(email, password);
+    // const { user, token } = await login(email, password);
+
     dispatch(loginSuccess({ user, token }));
     dispatch(storeAuthData({ user, token }));
     return { user, token };
